@@ -57,42 +57,28 @@ const LeftArrow = ()=>{
 }
 
 const RigthArrow = () =>{
-    const NextBlock = mainGrid.children[PositionY].children[PositionX + 1];
-
-    if(!NextBlock.className.includes(`${Tiles.Wall}`)){
-
-        //Loop Position X and find how many box are infront of the blue box
-        //return false once No box is found on front
-        let cantMoveBoxes = false;
-        let SpaceFound = false;
-        let foundBoxesOnFront = 0;
-        //start from next position and loop horizontal all the way
-        for (let i = (PositionX + 1); i < tileMap01.width && SpaceFound === false ; i++) {
-            const BlockOnFront = mainGrid.children[PositionY].children[i];
-            if(BlockOnFront.className.includes(Entities.Block)){
-                foundBoxesOnFront++;
-            }else{
-                SpaceFound = true;
-            }
+    let SpaceFound = false;
+    let foundBoxesOnFront = 0;
+    //Loop to see if i find a block in front if yes then add to the foundBoxesOnFront and stop looping in find a space
+    for (let i = (PositionX + 1); i < tileMap01.width && !SpaceFound; i++) {
+        const BlockOnFront = mainGrid.children[PositionY].children[i];
+        if(BlockOnFront.className.includes(Entities.Block)){
+            foundBoxesOnFront++;
+        }else{
+            SpaceFound = true;
         }
-        if(foundBoxesOnFront > 0){
-            const theLastBoxOnFront = mainGrid.children[PositionY].children[PositionX + (foundBoxesOnFront + 1)]
-
-            if(!theLastBoxOnFront.className.includes(Tiles.Wall)){
-                for (let B = 1; B < foundBoxesOnFront + 1; B++) {
-                    const FrontBox = mainGrid.children[PositionY].children[PositionX + (B + 1)]
-                    FrontBox.className = `${Tiles.Space} ${Entities.Block}`
-                }
-            }else {
-                cantMoveBoxes = true;
-            }
-        }
-        if(!cantMoveBoxes){
-            PositionX++;
-        }
-    }
-
+    };
     
+    const theLastBoxOnFront = mainGrid.children[PositionY].children[PositionX + (foundBoxesOnFront + 1)]
+    if(!theLastBoxOnFront.className.includes(Tiles.Wall)){
+        if(foundBoxesOnFront > 0){
+            for (let B = 1; B < foundBoxesOnFront + 1; B++) {
+                const FrontBox = mainGrid.children[PositionY].children[PositionX + (B + 1)]
+                FrontBox.className = `${Tiles.Space} ${Entities.Block}`
+            }
+        };
+        PositionX++;
+    }
 }
 const UpArrow = ()=>{
     const NextBlock = mainGrid.children[PositionY - 1].children[PositionX];
