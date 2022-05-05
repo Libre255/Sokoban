@@ -1,8 +1,8 @@
 let GridMap = tileMap01.mapGrid
 let mainGrid = document.getElementById("mainGrid");
 let rows = document.getElementsByClassName("rows");
-let PositionX = 1;
-let PositionY = 10;
+let PositionX = 5;
+let PositionY = 4;
 
 for (let i = 0; i < GridMap.length; i++) {
     mainGrid.innerHTML +=`<div class="rows"/>`;
@@ -18,15 +18,20 @@ for (let i = 0; i < GridMap.length; i++) {
             rows[i].innerHTML += `<div class="${Tiles.Space} ${Entities.Block}"/>`
         }else if(box.includes("P")){
             rows[i].innerHTML += `<div class="${Tiles.Space} ${Entities.Character}"/>`
+            PositionY = i;
+            PositionX = r;
         }else{
             rows[i].innerHTML += `<div class="${Tiles.Space}" />`
         }
     }
 }
-
-mainGrid.children[PositionY].children[PositionX].className = `${Tiles.Space} entity-player`
-
+window.addEventListener("keydown", function(e) {
+    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+        e.preventDefault();
+    }
+}, false);
 document.addEventListener('keydown', (e)=>{
+   
     const currentBlock = mainGrid.children[PositionY].children[PositionX];
     switch(e.key){
         case "ArrowLeft":LeftArrow();
@@ -39,19 +44,30 @@ document.addEventListener('keydown', (e)=>{
         break;
     }
     currentBlock.className = `${Tiles.Space}`;
-    const UpdatedPosition = mainGrid.children[PositionY].children[PositionX].className = `${Tiles.Space} ${Entities.Character}`;
+    mainGrid.children[PositionY].children[PositionX].className = `${Tiles.Space} ${Entities.Character}`;
 })
-const CheckAllNextBlocks = ()=> {
-    for (let i = 0; i < tileMap01.height; i++) {
-        for (let r = 0; r < tileMap01.width; r++) {
-            const NextBlock = mainGrid.children[i].children[PositionX];
-            
-        }
-    }
-}
+
 const LeftArrow = ()=>{
-    const NextBlock = mainGrid.children[PositionY].children[PositionX - 1];
-    if(!NextBlock.className.includes(`${Tiles.Wall}`)){
+    let SpaceFound = false;
+    let foundBoxesOnFront = 0;
+   
+    for (let i = (PositionX - 1); 0 < i && !SpaceFound; i--) {
+        const BlockOnFront = mainGrid.children[PositionY].children[i];
+        if(BlockOnFront.className.includes(Entities.Block)){
+            foundBoxesOnFront++;
+        }else{
+            SpaceFound = true;
+        }
+    };
+    
+    const theLastBoxOnFront = mainGrid.children[PositionY].children[PositionX - (foundBoxesOnFront + 1)]
+    if(!theLastBoxOnFront.className.includes(Tiles.Wall)){
+        if(foundBoxesOnFront > 0){
+            for (let B = 1; B < foundBoxesOnFront + 1; B++) {
+                const FrontBox = mainGrid.children[PositionY].children[PositionX - (B + 1)]
+                FrontBox.className = `${Tiles.Space} ${Entities.Block}`
+            }
+        };
         PositionX--;
     }
 }
@@ -59,7 +75,7 @@ const LeftArrow = ()=>{
 const RigthArrow = () =>{
     let SpaceFound = false;
     let foundBoxesOnFront = 0;
-    //Loop to see if i find a block in front if yes then add to the foundBoxesOnFront and stop looping in find a space
+
     for (let i = (PositionX + 1); i < tileMap01.width && !SpaceFound; i++) {
         const BlockOnFront = mainGrid.children[PositionY].children[i];
         if(BlockOnFront.className.includes(Entities.Block)){
@@ -81,43 +97,51 @@ const RigthArrow = () =>{
     }
 }
 const UpArrow = ()=>{
-    const NextBlock = mainGrid.children[PositionY - 1].children[PositionX];
-    if(!NextBlock.className.includes(`${Tiles.Wall}`)){
+    let SpaceFound = false;
+    let foundBoxesOnFront = 0;
+   
+    for (let i = (PositionY - 1); 0 < i && !SpaceFound; i--) {
+        const BlockOnFront = mainGrid.children[i].children[PositionX];
+        if(BlockOnFront.className.includes(Entities.Block)){
+            foundBoxesOnFront++;
+        }else{
+            SpaceFound = true;
+        }
+    };
+    
+    const theLastBoxOnFront = mainGrid.children[PositionY- (foundBoxesOnFront + 1)].children[PositionX]
+    if(!theLastBoxOnFront.className.includes(Tiles.Wall)){
+        if(foundBoxesOnFront > 0){
+            for (let B = 1; B < foundBoxesOnFront + 1; B++) {
+                const FrontBox = mainGrid.children[PositionY - (B + 1)].children[PositionX]
+                FrontBox.className = `${Tiles.Space} ${Entities.Block}`
+            }
+        };
         PositionY--;
     }
 }
 const DownArrow = ()=>{
-    const NextBlock = mainGrid.children[PositionY + 1].children[PositionX]; 
-    if(!NextBlock.className.includes(`${Tiles.Wall}`)){
+    let SpaceFound = false;
+    let foundBoxesOnFront = 0;
+
+    for (let i = (PositionY + 1); i < tileMap01.width && !SpaceFound; i++) {
+        const BlockOnFront = mainGrid.children[i].children[PositionX];
+        if(BlockOnFront.className.includes(Entities.Block)){
+            foundBoxesOnFront++;
+        }else{
+            SpaceFound = true;
+        }
+    };
+    
+    const theLastBoxOnFront = mainGrid.children[PositionY + (foundBoxesOnFront + 1)].children[PositionX]
+    if(!theLastBoxOnFront.className.includes(Tiles.Wall)){
+        if(foundBoxesOnFront > 0){
+            for (let B = 1; B < foundBoxesOnFront + 1; B++) {
+                const FrontBox = mainGrid.children[PositionY + (B + 1)].children[PositionX]
+                FrontBox.className = `${Tiles.Space} ${Entities.Block}`
+            }
+        };
         PositionY++;
     }
 }
-        // //Loop Position X and find how many box are infront of the blue box
-        // //return false once No box is found on front
-        // let cantMoveBoxes = false;
-        // let SpaceFound = false;
-        // let foundBoxesOnFront = 0;
-        // //start from next position and loop horizontal all the way
-        // for (let i = (PositionX + 1); i < tileMap01.width && SpaceFound === false ; i++) {
-        //     const BlockOnFront = mainGrid.children[PositionY].children[i];
-        //     if(BlockOnFront.className.includes(Entities.Block)){
-        //         foundBoxesOnFront++;
-        //     }else{
-        //         SpaceFound = true;
-        //     }
-        // }
-        // if(foundBoxesOnFront > 0){
-        //     const theLastBoxOnFront = mainGrid.children[PositionY].children[PositionX + (foundBoxesOnFront + 1)]
-
-        //     if(!theLastBoxOnFront.className.includes(Tiles.Wall)){
-        //         for (let B = 1; B < foundBoxesOnFront + 1; B++) {
-        //             const FrontBox = mainGrid.children[PositionY].children[PositionX + (B + 1)]
-        //             FrontBox.className = `${Tiles.Space} ${Entities.Block}`
-        //         }
-        //     }else {
-        //         cantMoveBoxes = true;
-        //     }
-        // }
-        // if(!cantMoveBoxes){
-        //     PositionX++;
-        // }
+        
