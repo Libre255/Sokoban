@@ -34,13 +34,13 @@ window.addEventListener("keydown", function(e) {
 document.addEventListener('keydown', (e)=>{
        const currentBlock = mainGrid.children[PositionY].children[PositionX];
        switch(e.key){
-           case "ArrowLeft":LeftArrow();
+           case "ArrowLeft": MOVE("MinusX");
            break;
-           case "ArrowRight":RigthArrow();
+           case "ArrowRight":MOVE("PlusX");
            break;
-           case "ArrowUp":UpArrow();
+           case "ArrowUp":MOVE("MinusY");;
            break;
-           case "ArrowDown":DownArrow();
+           case "ArrowDown":MOVE("PlusY");
            break;
        }
        const updatedBlock = mainGrid.children[PositionY].children[PositionX]
@@ -75,9 +75,29 @@ const CheckBoxesReachedGoal = ()=>{
     }
     return GoalPosition.every(position => position.className.includes(Entities.Block))
 }
-const LeftArrow = ()=>{
-    const boxInFront =  mainGrid.children[PositionY].children[PositionX - 1];
-    const twoStepForward = mainGrid.children[PositionY].children[PositionX - 2];
+
+const MOVE = (equation)=>{
+    let boxInFront;
+    let twoStepForward;
+
+    switch(equation){
+        case "PlusX":
+            boxInFront =  mainGrid.children[PositionY].children[PositionX + 1];
+            twoStepForward = mainGrid.children[PositionY].children[PositionX + 2];
+            break;
+        case "MinusX":
+            boxInFront =  mainGrid.children[PositionY].children[PositionX - 1];
+            twoStepForward = mainGrid.children[PositionY].children[PositionX - 2];
+            break;
+        case "PlusY":
+            boxInFront =  mainGrid.children[PositionY + 1].children[PositionX];
+            twoStepForward = mainGrid.children[PositionY + 2].children[PositionX];
+            break;
+        case "MinusY":
+            boxInFront =  mainGrid.children[PositionY - 1].children[PositionX];
+            twoStepForward = mainGrid.children[PositionY -2].children[PositionX];
+            break;
+    }
 
     if(boxInFront.className.includes(Entities.Block)){
         if(!twoStepForward.className.includes(Entities.Block) && !twoStepForward.className.includes(Tiles.Wall)){
@@ -86,61 +106,25 @@ const LeftArrow = ()=>{
             }else{
                 twoStepForward.className = `${Tiles.Space} ${Entities.Block}`
             }
-            PositionX--;
-        }
-    }else if(!boxInFront.className.includes(Tiles.Wall)) {
-        PositionX--;
-    }
-}
-const RigthArrow = () =>{
-    const boxInFront =  mainGrid.children[PositionY].children[PositionX + 1];
-    const twoStepForward = mainGrid.children[PositionY].children[PositionX + 2];
-
-    if(boxInFront.className.includes(Entities.Block)){
-        if(!twoStepForward.className.includes(Entities.Block) && !twoStepForward.className.includes(Tiles.Wall)){
-            if(twoStepForward.className.includes(Tiles.Goal)){
-                twoStepForward.className = `${Tiles.Space} ${Tiles.Goal} ${Entities.Block}`
-            }else{
-                twoStepForward.className = `${Tiles.Space} ${Entities.Block}`
+            switch(equation){
+                case "PlusX":PositionX++;
+                    break;
+                case "MinusX":PositionX--;
+                    break;
+                case "PlusY":PositionY++;
+                    break;
+                case "MinusY":PositionY--;
             }
-            PositionX++;
         }
     }else if(!boxInFront.className.includes(Tiles.Wall)) {
-        PositionX++;
-    }
-}
-const UpArrow = ()=>{
-    const boxInFront =  mainGrid.children[PositionY - 1].children[PositionX];
-    const twoStepForward = mainGrid.children[PositionY -2].children[PositionX];
-
-    if(boxInFront.className.includes(Entities.Block)){
-        if(!twoStepForward.className.includes(Entities.Block) && !twoStepForward.className.includes(Tiles.Wall)){
-            if(twoStepForward.className.includes(Tiles.Goal)){
-                twoStepForward.className = `${Tiles.Space} ${Tiles.Goal} ${Entities.Block}`
-            }else{
-                twoStepForward.className = `${Tiles.Space} ${Entities.Block}`
-            }
-            PositionY--;
+        switch(equation){
+            case "PlusX":PositionX++;
+                break;
+            case "MinusX":PositionX--;
+                break;
+            case "PlusY":PositionY++;
+                break;
+            case "MinusY":PositionY--;
         }
-    }else if(!boxInFront.className.includes(Tiles.Wall)) {
-        PositionY--;
     }
 }
-const DownArrow = ()=>{
-    const boxInFront =  mainGrid.children[PositionY + 1].children[PositionX];
-    const twoStepForward = mainGrid.children[PositionY + 2].children[PositionX];
-
-    if(boxInFront.className.includes(Entities.Block)){
-        if(!twoStepForward.className.includes(Entities.Block) && !twoStepForward.className.includes(Tiles.Wall)){
-            if(twoStepForward.className.includes(Tiles.Goal)){
-                twoStepForward.className = `${Tiles.Space} ${Tiles.Goal} ${Entities.Block}`
-            }else{
-                twoStepForward.className = `${Tiles.Space} ${Entities.Block}`
-            }
-            PositionY++;
-        }
-    }else if(!boxInFront.className.includes(Tiles.Wall)) {
-        PositionY++;
-    }
-}
-        
