@@ -66,26 +66,17 @@ const CheckBoxesReachedGoal = ()=>{
     return GoalPosition.every(position => position.className === `${Tiles.Space} ${Entities.Block}`)
 }
 const LeftArrow = ()=>{
-    let SpaceFound = false;
-    let foundBoxesOnFront = 0;
-   
-    for (let i = (PositionX - 1); 0 < i && !SpaceFound; i--) {
-        const BlockOnFront = mainGrid.children[PositionY].children[i];
-        if(BlockOnFront.className.includes(Entities.Block)){
-            foundBoxesOnFront++;
-        }else{
-            SpaceFound = true;
+    const boxInFront =  mainGrid.children[PositionY].children[PositionX - 1];
+    const twoStepForward = mainGrid.children[PositionY].children[PositionX - 2];
+
+       
+
+    if(boxInFront.className.includes(Entities.Block)){
+        if(!twoStepForward.className.includes(Entities.Block)){
+            twoStepForward.className = `${Tiles.Space} ${Entities.Block}`
+            PositionX--;
         }
-    };
-    
-    const theLastBoxOnFront = mainGrid.children[PositionY].children[PositionX - (foundBoxesOnFront + 1)]
-    if(!theLastBoxOnFront.className.includes(Tiles.Wall)){
-        if(foundBoxesOnFront > 0){
-            for (let B = 1; B < foundBoxesOnFront + 1; B++) {
-                const FrontBox = mainGrid.children[PositionY].children[PositionX - (B + 1)]
-                FrontBox.className = `${Tiles.Space} ${Entities.Block}`
-            }
-        };
+    }else if(!boxInFront.className.includes(Tiles.Wall)) {
         PositionX--;
     }
 }
