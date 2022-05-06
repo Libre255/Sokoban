@@ -1,8 +1,8 @@
 let GridMap = tileMap01.mapGrid
 let mainGrid = document.getElementById("mainGrid");
 let rows = document.getElementsByClassName("rows");
-let PositionX = 5;
-let PositionY = 4;
+let PositionX;
+let PositionY;
 
 for (let i = 0; i < GridMap.length; i++) {
     mainGrid.innerHTML +=`<div class="rows"/>`;
@@ -25,23 +25,6 @@ for (let i = 0; i < GridMap.length; i++) {
         }
     }
 }
-
-const CheckBoxesReachedGoal = ()=>{
-    const GoalPosition = [];
-    for (let m = 0; m < GridMap.length; m++) {
-        let gridRow = GridMap[m];
-        for(let r = 0; r < gridRow.length; r++){
-            let box = gridRow[r];
-            if(box.includes("G")){
-                GoalPosition.push(rows[m].children[r])
-            }
-        }
-    }
-    console.log(GoalPosition);
-    return GoalPosition.every(position => position.className === `${Tiles.Space} ${Entities.Block}`)
-}
-
-
 
 window.addEventListener("keydown", function(e) {
     if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
@@ -68,7 +51,20 @@ document.addEventListener('keydown', (e)=>{
                               </div>`
        }
 })
-
+const CheckBoxesReachedGoal = ()=>{
+    const GoalPosition = [];
+    for (let m = 0; m < GridMap.length; m++) {
+        let gridRow = GridMap[m];
+        for(let r = 0; r < gridRow.length; r++){
+            let box = gridRow[r];
+            if(box.includes("G")){
+                GoalPosition.push(rows[m].children[r])
+            }
+        }
+    }
+    console.log(GoalPosition);
+    return GoalPosition.every(position => position.className === `${Tiles.Space} ${Entities.Block}`)
+}
 const LeftArrow = ()=>{
     let SpaceFound = false;
     let foundBoxesOnFront = 0;
