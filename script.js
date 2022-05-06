@@ -43,8 +43,19 @@ document.addEventListener('keydown', (e)=>{
            case "ArrowDown":DownArrow();
            break;
        }
-       currentBlock.className = `${Tiles.Space}`;
-       mainGrid.children[PositionY].children[PositionX].className = `${Tiles.Space} ${Entities.Character}`;
+       const updatedBlock = mainGrid.children[PositionY].children[PositionX]
+
+       if(currentBlock.className.includes(Tiles.Goal)){
+            currentBlock.className = `${Tiles.Space} ${Tiles.Goal}`
+       }else {
+            currentBlock.className = `${Tiles.Space}`;
+       }
+       if(updatedBlock.className.includes(Tiles.Goal)){
+         updatedBlock.className = `${Tiles.Space} ${Tiles.Goal} ${Entities.Character}`;
+       }else {
+         updatedBlock.className = `${Tiles.Space} ${Entities.Character}`;
+       }
+
        if(CheckBoxesReachedGoal()){
         mainGrid.innerHTML = `<div id="Finish">
                                 <span>Congratulations you won!</span>
@@ -62,18 +73,19 @@ const CheckBoxesReachedGoal = ()=>{
             }
         }
     }
-    console.log(GoalPosition);
-    return GoalPosition.every(position => position.className === `${Tiles.Space} ${Entities.Block}`)
+    return GoalPosition.every(position => position.className.includes(Entities.Block))
 }
 const LeftArrow = ()=>{
     const boxInFront =  mainGrid.children[PositionY].children[PositionX - 1];
     const twoStepForward = mainGrid.children[PositionY].children[PositionX - 2];
 
-       
-
     if(boxInFront.className.includes(Entities.Block)){
-        if(!twoStepForward.className.includes(Entities.Block)){
-            twoStepForward.className = `${Tiles.Space} ${Entities.Block}`
+        if(!twoStepForward.className.includes(Entities.Block) && !twoStepForward.className.includes(Tiles.Wall)){
+            if(twoStepForward.className.includes(Tiles.Goal)){
+                twoStepForward.className = `${Tiles.Space} ${Tiles.Goal} ${Entities.Block}`
+            }else{
+                twoStepForward.className = `${Tiles.Space} ${Entities.Block}`
+            }
             PositionX--;
         }
     }else if(!boxInFront.className.includes(Tiles.Wall)) {
@@ -81,74 +93,53 @@ const LeftArrow = ()=>{
     }
 }
 const RigthArrow = () =>{
-    let SpaceFound = false;
-    let foundBoxesOnFront = 0;
+    const boxInFront =  mainGrid.children[PositionY].children[PositionX + 1];
+    const twoStepForward = mainGrid.children[PositionY].children[PositionX + 2];
 
-    for (let i = (PositionX + 1); i < tileMap01.width && !SpaceFound; i++) {
-        const BlockOnFront = mainGrid.children[PositionY].children[i];
-        if(BlockOnFront.className.includes(Entities.Block)){
-            foundBoxesOnFront++;
-        }else{
-            SpaceFound = true;
-        }
-    };
-    
-    const theLastBoxOnFront = mainGrid.children[PositionY].children[PositionX + (foundBoxesOnFront + 1)]
-    if(!theLastBoxOnFront.className.includes(Tiles.Wall)){
-        if(foundBoxesOnFront > 0){
-            for (let B = 1; B < foundBoxesOnFront + 1; B++) {
-                const FrontBox = mainGrid.children[PositionY].children[PositionX + (B + 1)]
-                FrontBox.className = `${Tiles.Space} ${Entities.Block}`
+    if(boxInFront.className.includes(Entities.Block)){
+        if(!twoStepForward.className.includes(Entities.Block) && !twoStepForward.className.includes(Tiles.Wall)){
+            if(twoStepForward.className.includes(Tiles.Goal)){
+                twoStepForward.className = `${Tiles.Space} ${Tiles.Goal} ${Entities.Block}`
+            }else{
+                twoStepForward.className = `${Tiles.Space} ${Entities.Block}`
             }
-        };
+            PositionX++;
+        }
+    }else if(!boxInFront.className.includes(Tiles.Wall)) {
         PositionX++;
     }
 }
 const UpArrow = ()=>{
-    let SpaceFound = false;
-    let foundBoxesOnFront = 0;
-   
-    for (let i = (PositionY - 1); 0 < i && !SpaceFound; i--) {
-        const BlockOnFront = mainGrid.children[i].children[PositionX];
-        if(BlockOnFront.className.includes(Entities.Block)){
-            foundBoxesOnFront++;
-        }else{
-            SpaceFound = true;
-        }
-    };
-    
-    const theLastBoxOnFront = mainGrid.children[PositionY- (foundBoxesOnFront + 1)].children[PositionX]
-    if(!theLastBoxOnFront.className.includes(Tiles.Wall)){
-        if(foundBoxesOnFront > 0){
-            for (let B = 1; B < foundBoxesOnFront + 1; B++) {
-                const FrontBox = mainGrid.children[PositionY - (B + 1)].children[PositionX]
-                FrontBox.className = `${Tiles.Space} ${Entities.Block}`
+    const boxInFront =  mainGrid.children[PositionY - 1].children[PositionX];
+    const twoStepForward = mainGrid.children[PositionY -2].children[PositionX];
+
+    if(boxInFront.className.includes(Entities.Block)){
+        if(!twoStepForward.className.includes(Entities.Block) && !twoStepForward.className.includes(Tiles.Wall)){
+            if(twoStepForward.className.includes(Tiles.Goal)){
+                twoStepForward.className = `${Tiles.Space} ${Tiles.Goal} ${Entities.Block}`
+            }else{
+                twoStepForward.className = `${Tiles.Space} ${Entities.Block}`
             }
-        };
+            PositionY--;
+        }
+    }else if(!boxInFront.className.includes(Tiles.Wall)) {
         PositionY--;
     }
 }
 const DownArrow = ()=>{
-    let SpaceFound = false;
-    let foundBoxesOnFront = 0;
+    const boxInFront =  mainGrid.children[PositionY + 1].children[PositionX];
+    const twoStepForward = mainGrid.children[PositionY + 2].children[PositionX];
 
-    for (let i = (PositionY + 1); i < tileMap01.width && !SpaceFound; i++) {
-        const BlockOnFront = mainGrid.children[i].children[PositionX];
-        if(BlockOnFront.className.includes(Entities.Block)){
-            foundBoxesOnFront++;
-        }else{
-            SpaceFound = true;
-        }
-    };
-    
-    const theLastBoxOnFront = mainGrid.children[PositionY + (foundBoxesOnFront + 1)].children[PositionX]
-    if(!theLastBoxOnFront.className.includes(Tiles.Wall)){
-        if(foundBoxesOnFront > 0){
-            for (let B = 1; B < foundBoxesOnFront + 1; B++) {
-                const FrontBox = mainGrid.children[PositionY + (B + 1)].children[PositionX]
-                FrontBox.className = `${Tiles.Space} ${Entities.Block}`
+    if(boxInFront.className.includes(Entities.Block)){
+        if(!twoStepForward.className.includes(Entities.Block) && !twoStepForward.className.includes(Tiles.Wall)){
+            if(twoStepForward.className.includes(Tiles.Goal)){
+                twoStepForward.className = `${Tiles.Space} ${Tiles.Goal} ${Entities.Block}`
+            }else{
+                twoStepForward.className = `${Tiles.Space} ${Entities.Block}`
             }
-        };
+            PositionY++;
+        }
+    }else if(!boxInFront.className.includes(Tiles.Wall)) {
         PositionY++;
     }
 }
