@@ -114,6 +114,7 @@ const MOVE = (equation)=>{
                 case "PlusY":PositionY++;
                     break;
                 case "MinusY":PositionY--;
+                    break;
             }
         }
     }else if(!boxInFront.className.includes(Tiles.Wall)) {
@@ -125,6 +126,7 @@ const MOVE = (equation)=>{
             case "PlusY":PositionY++;
                 break;
             case "MinusY":PositionY--;
+                break;
         }
     }
 }
