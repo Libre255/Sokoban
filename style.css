@@ -37,3 +37,17 @@ main{
 .entity-player{
     background-color: blue;
 }
+
+#Finish{
+    position: absolute;
+    z-index: 1;
+    width: inherit;
+    height: inherit;
+    display: block;
+    text-align: center;
+}
+#Finish > span{
+    font-size: 5rem;
+    color: whitesmoke;
+    text-shadow: 0.2rem 0.2rem black ;
+}

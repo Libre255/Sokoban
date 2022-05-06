@@ -25,26 +25,48 @@ for (let i = 0; i < GridMap.length; i++) {
         }
     }
 }
+
+const CheckBoxesReachedGoal = ()=>{
+    const GoalPosition = [];
+    for (let m = 0; m < GridMap.length; m++) {
+        let gridRow = GridMap[m];
+        for(let r = 0; r < gridRow.length; r++){
+            let box = gridRow[r];
+            if(box.includes("G")){
+                GoalPosition.push(rows[m].children[r])
+            }
+        }
+    }
+    console.log(GoalPosition);
+    return GoalPosition.every(position => position.className === `${Tiles.Space} ${Entities.Block}`)
+}
+
+
+
 window.addEventListener("keydown", function(e) {
     if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
         e.preventDefault();
     }
 }, false);
 document.addEventListener('keydown', (e)=>{
-   
-    const currentBlock = mainGrid.children[PositionY].children[PositionX];
-    switch(e.key){
-        case "ArrowLeft":LeftArrow();
-        break;
-        case "ArrowRight":RigthArrow();
-        break;
-        case "ArrowUp":UpArrow();
-        break;
-        case "ArrowDown":DownArrow();
-        break;
-    }
-    currentBlock.className = `${Tiles.Space}`;
-    mainGrid.children[PositionY].children[PositionX].className = `${Tiles.Space} ${Entities.Character}`;
+       const currentBlock = mainGrid.children[PositionY].children[PositionX];
+       switch(e.key){
+           case "ArrowLeft":LeftArrow();
+           break;
+           case "ArrowRight":RigthArrow();
+           break;
+           case "ArrowUp":UpArrow();
+           break;
+           case "ArrowDown":DownArrow();
+           break;
+       }
+       currentBlock.className = `${Tiles.Space}`;
+       mainGrid.children[PositionY].children[PositionX].className = `${Tiles.Space} ${Entities.Character}`;
+       if(CheckBoxesReachedGoal()){
+        mainGrid.innerHTML = `<div id="Finish">
+                                <span>Congratulations you won!</span>
+                              </div>`
+       }
 })
 
 const LeftArrow = ()=>{
@@ -71,7 +93,6 @@ const LeftArrow = ()=>{
         PositionX--;
     }
 }
-
 const RigthArrow = () =>{
     let SpaceFound = false;
     let foundBoxesOnFront = 0;
